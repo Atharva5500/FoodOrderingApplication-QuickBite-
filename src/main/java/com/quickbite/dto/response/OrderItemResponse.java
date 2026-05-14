@@ -1,0 +1,23 @@
+package com.quickbite.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderItemResponse {
+
+    private Long id;
+    private Long menuItemId;
+    private String menuItemName;
+    private String imageUrl;
+    private int quantity;
+    private BigDecimal price;        // price at time of order
+    private BigDecimal subtotal;     // price × quantity
+}
