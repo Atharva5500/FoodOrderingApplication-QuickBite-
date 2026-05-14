@@ -17,16 +17,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 
-// @RestControllerAdvice intercepts ALL exceptions thrown
-// anywhere in the application — controllers, services, repositories
-// One class handles everything — no try/catch needed in controllers
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ── 1. Our Custom Exceptions ─────────────────────────────────
 
-    // Handles: throw new ResourceNotFoundException("Restaurant not found")
-    // Returns: 404 Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(
             ResourceNotFoundException ex) {
@@ -36,8 +31,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    // Handles: throw new BadRequestException("Cart is empty")
-    // Returns: 400 Bad Request
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse<Void>> handleBadRequest(
             BadRequestException ex) {
@@ -47,8 +41,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    // Handles: throw new UnauthorizedException("You don't own this restaurant")
-    // Returns: 403 Forbidden
+
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ApiResponse<Void>> handleUnauthorized(
             UnauthorizedException ex) {
@@ -58,20 +51,9 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    // ── 2. Validation Exception ──────────────────────────────────
+    // ── Validation Exception ──────────────────────────────────
 
-    // Handles: @Valid fails on request DTO
-    // Example: empty email, password too short, null role
-    // Returns: 400 with a map of field → error message
-    // Example response:
-    // {
-    //   "success": false,
-    //   "message": "Validation failed",
-    //   "data": {
-    //     "email": "Enter a valid email",
-    //     "password": "Password must be at least 6 characters"
-    //   }
-    // }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
@@ -96,10 +78,9 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    // ── 3. Spring Security Exceptions ────────────────────────────
+    // ── Spring Security Exceptions ────────────────────────────
 
-    // Handles: JWT token missing, expired, or invalid
-    // Returns: 401 Unauthorized
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(
             AuthenticationException ex) {
@@ -109,9 +90,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Authentication failed: " + ex.getMessage()));
     }
 
-    // Handles: Valid JWT but wrong role
-    // Example: Customer trying to access /api/admin/**
-    // Returns: 403 Forbidden
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
             AccessDeniedException ex) {
@@ -121,11 +100,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Access denied: you don't have permission"));
     }
 
-    // ── 4. Request Format Exceptions ─────────────────────────────
 
-    // Handles: invalid JSON in request body
-    // Example: missing closing bracket, wrong data type
-    // Returns: 400 Bad Request
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidJson(
             HttpMessageNotReadableException ex) {
@@ -135,9 +110,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Invalid request format. Please check your JSON."));
     }
 
-    // Handles: wrong type in @PathVariable or @RequestParam
-    // Example: /api/restaurants/abc where id should be Long
-    // Returns: 400 Bad Request
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex) {
@@ -155,9 +128,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(message));
     }
 
-    // Handles: required @RequestParam is missing from URL
-    // Example: GET /api/restaurants/search without ?keyword=
-    // Returns: 400 Bad Request
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiResponse<Void>> handleMissingParam(
             MissingServletRequestParameterException ex) {
@@ -168,11 +139,7 @@ public class GlobalExceptionHandler {
                         "Required parameter '" + ex.getParameterName() + "' is missing"));
     }
 
-    // ── 5. Database Exception ────────────────────────────────────
 
-    // Handles: DB constraint violations
-    // Example: duplicate email (unique constraint on users.email)
-    // Returns: 409 Conflict
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(
             DataIntegrityViolationException ex) {
@@ -183,17 +150,12 @@ public class GlobalExceptionHandler {
                         "Data conflict: a record with this value already exists"));
     }
 
-    // ── 6. Catch-All Exception ───────────────────────────────────
 
-    // Handles: any unexpected exception not caught above
-    // Returns: 500 Internal Server Error
-    // IMPORTANT: Never expose the real error message to client in production
-    // It could reveal internal system details to attackers
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(
             Exception ex) {
 
-        // Log the actual error internally (we'll add proper logging later)
+
         System.err.println("Unexpected error: " + ex.getMessage());
 
         return ResponseEntity

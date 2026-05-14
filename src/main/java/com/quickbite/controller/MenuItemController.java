@@ -39,7 +39,7 @@ public class MenuItemController {
 
     // ─── OWNER ENDPOINTS ──────────────────────────────────
 
-    // POST still needs restaurantId — tells service which restaurant
+
     @PostMapping("/api/restaurants/{restaurantId}/menu")
     public ResponseEntity<ApiResponse<MenuItemResponse>> addItem(
             @PathVariable Long restaurantId,

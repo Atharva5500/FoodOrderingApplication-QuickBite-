@@ -23,7 +23,7 @@ public class OrderController {
 
     // ─── CUSTOMER ENDPOINTS ───────────────────────────────────────
 
-    // POST /api/orders/place
+
     @PostMapping("/place")
     public ResponseEntity<ApiResponse<OrderResponse>> placeOrder(
             @Valid @RequestBody PlaceOrderRequest request,
@@ -36,7 +36,7 @@ public class OrderController {
                 .body(ApiResponse.success("Order placed successfully!", order));
     }
 
-    // GET /api/orders/my
+
     @GetMapping("/my")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyOrders(
             Authentication authentication) {
@@ -46,9 +46,7 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success("Your orders", orders));
     }
 
-    // GET /api/orders/{id}
-    // Customer or Owner only — no admin
-    // ✅ Admin uses GET /api/admin/orders/{id}
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<OrderResponse>> getOrderById(
             @PathVariable Long id,
@@ -61,9 +59,7 @@ public class OrderController {
 
     // ─── OWNER ENDPOINTS ─────────────────────────────────────────
 
-    // GET /api/orders/restaurant/{restaurantId}
-    // Owner only — no admin
-    // ✅ Admin uses GET /api/admin/restaurants/{id}/orders
+
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getRestaurantOrders(
             @PathVariable Long restaurantId,
@@ -74,7 +70,7 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success("Restaurant orders", orders));
     }
 
-    // PATCH /api/orders/{id}/status
+
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponse<OrderResponse>> updateStatus(
             @PathVariable Long id,
@@ -86,6 +82,5 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success("Order status updated", order));
     }
 
-    // ✅ GET /api/orders/all REMOVED
-    // Moved to GET /api/admin/orders in AdminController
+
 }

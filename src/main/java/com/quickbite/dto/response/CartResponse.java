@@ -18,7 +18,7 @@ public class CartResponse {
     private Long restaurantId;
     private String restaurantName;
     private List<CartItemResponse> items;
-    private BigDecimal totalAmount; // sum of all subtotals
-    private int totalItems;     // total item count
+    private BigDecimal totalAmount;
+    private int totalItems;
 }
 

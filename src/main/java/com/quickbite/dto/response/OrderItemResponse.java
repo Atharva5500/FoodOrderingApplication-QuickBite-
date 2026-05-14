@@ -18,6 +18,6 @@ public class OrderItemResponse {
     private String menuItemName;
     private String imageUrl;
     private int quantity;
-    private BigDecimal price;        // price at time of order
-    private BigDecimal subtotal;     // price × quantity
+    private BigDecimal price;
+    private BigDecimal subtotal;
 }

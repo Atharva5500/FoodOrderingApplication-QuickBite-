@@ -28,8 +28,6 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     @Transactional
-    // ✅ @Transactional keeps session open
-    // Prevents LazyInitializationException on menuItem.getRestaurant().getOwner()
     public MenuItemResponse addMenuItem(Long restaurantId,
                                         MenuItemRequest request,
                                         String ownerEmail) {
@@ -52,7 +50,6 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     @Transactional
-    // ✅ @Transactional — menuItem is managed, dirty checking auto-saves changes
     public MenuItemResponse updateMenuItem(Long menuItemId,
                                            MenuItemRequest request,
                                            String ownerEmail) {
@@ -94,7 +91,6 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     @Transactional(readOnly = true)
-    // ✅ readOnly — no writes, keeps session open for lazy loads
     public List<MenuItemResponse> getMenuByRestaurant(Long restaurantId) {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -137,8 +133,7 @@ public class MenuItemServiceImpl implements MenuItemService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Menu item not found with id: " + menuItemId));
 
-        // ✅ Lazy load chain safe inside @Transactional
-        // menuItem → restaurant → owner
+
         String restaurantOwnerEmail = menuItem.getRestaurant().getOwner().getEmail();
         if (!restaurantOwnerEmail.equals(ownerEmail)) {
             throw new UnauthorizedException("You do not own this menu item");
@@ -156,7 +151,6 @@ public class MenuItemServiceImpl implements MenuItemService {
                 .category(menuItem.getCategory())
                 .imageUrl(menuItem.getImageUrl())
                 .isAvailable(menuItem.isAvailable())
-                // ✅ Lazy load safe inside @Transactional
                 .restaurantId(menuItem.getRestaurant().getId())
                 .build();
     }

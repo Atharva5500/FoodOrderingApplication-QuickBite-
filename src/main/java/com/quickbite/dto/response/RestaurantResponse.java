@@ -19,5 +19,5 @@ public class RestaurantResponse {
     private String imageUrl;
     private boolean isOpen;
     private Double rating;
-    private String ownerName; // just the name, not full User object
+    private String ownerName;
 }

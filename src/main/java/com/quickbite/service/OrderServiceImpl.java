@@ -97,8 +97,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Order not found with id: " + orderId));
 
-        // ✅ Only customer and owner check — no isAdmin check
-        // Admin uses /api/admin/orders/{id} which goes through AdminService
         boolean isCustomer = order.getCustomer().getId().equals(user.getId());
         boolean isOwner    = order.getRestaurant().getOwner().getId().equals(user.getId());
 
@@ -141,8 +139,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Restaurant not found with id: " + restaurantId));
 
-        // ✅ Only owner check — no isAdmin check
-        // Admin uses /api/admin/restaurants/{id}/orders through AdminService
         if (!restaurant.getOwner().getId().equals(owner.getId())) {
             throw new UnauthorizedException("You do not own this restaurant");
         }
@@ -181,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
         int currentIndex = sequence.indexOf(current);
         int nextIndex    = sequence.indexOf(next);
 
-        // ✅ Guard against invalid status values
+
         if (currentIndex == -1) {
             throw new BadRequestException("Current order status is invalid: " + current);
         }
@@ -194,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    // ✅ mapToResponse is package-accessible so AdminServiceImpl can reuse it
+
     OrderResponse mapToResponse(Order order) {
 
         List<OrderItemResponse> itemResponses = order.getOrderItems()

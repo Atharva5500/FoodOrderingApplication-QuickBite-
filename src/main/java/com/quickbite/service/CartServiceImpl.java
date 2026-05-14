@@ -35,7 +35,6 @@ public class CartServiceImpl implements CartService {
         MenuItem menuItem = menuItemRepository.findById(request.getMenuItemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
 
-        // ✅ Get restaurant from DB relationship — never trust frontend
         Restaurant restaurant = menuItem.getRestaurant();
 
         if (!menuItem.isAvailable()) {
@@ -52,11 +51,11 @@ public class CartServiceImpl implements CartService {
                             .customer(customer)
                             .restaurant(restaurant)
                             .build();
-                    // ✅ save() needed — NEW entity not yet managed by JPA
+
                     return cartRepository.save(newCart);
                 });
 
-        // Single restaurant rule
+
         if (cart.getRestaurant() != null &&
                 !cart.getRestaurant().getId().equals(restaurant.getId())) {
             throw new BadRequestException(
@@ -70,8 +69,7 @@ public class CartServiceImpl implements CartService {
                 .findByCartAndMenuItem(cart, menuItem);
 
         if (existingItem.isPresent()) {
-            // Managed entity — dirty checking auto-updates on commit
-            // ✅ No save() needed
+
             CartItem cartItem = existingItem.get();
             cartItem.setQuantity(cartItem.getQuantity() + request.getQuantity());
         } else {
@@ -81,8 +79,7 @@ public class CartServiceImpl implements CartService {
                     .quantity(request.getQuantity())
                     .priceAtAddition(menuItem.getPrice())
                     .build();
-            // ✅ Add to collection FIRST so buildCartResponse() sees it in memory
-            // Then save to DB
+
             cart.getCartItems().add(newCartItem);
             cartItemRepository.save(newCartItem);
         }
@@ -105,18 +102,15 @@ public class CartServiceImpl implements CartService {
 
         Cart cart = cartItem.getCart();
 
-        // ✅ Remove from collection first — keeps memory and DB in sync
-        // orphanRemoval = true handles DB deletion automatically
-        // No explicit cartItemRepository.delete() needed
+
         cart.getCartItems().remove(cartItem);
 
-        // ✅ isEmpty() now reliable — memory matches DB state
+
         if (cart.getCartItems().isEmpty()) {
             cart.setRestaurant(null);
         }
 
-        // cart is managed — dirty checking handles the update
-        // explicit save() kept here for clarity
+
         cartRepository.save(cart);
 
         return buildCartResponse(cart);
@@ -124,8 +118,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional(readOnly = true)
-    // ✅ readOnly keeps Hibernate session open
-    // Prevents LazyInitializationException on cart.getCartItems()
     public CartResponse getMyCart(String customerEmail) {
 
         User customer = getUserByEmail(customerEmail);
@@ -146,14 +138,9 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void clearCart(String customerEmail) {
 
-        // ✅ Default propagation = REQUIRED
-        // Joins existing transaction from placeOrder()
-        // If placeOrder() rolls back, clearCart() rolls back too
-        // DO NOT change to REQUIRES_NEW
+
         User customer = getUserByEmail(customerEmail);
         cartRepository.findByCustomer(customer).ifPresent(cart -> {
-            // ✅ Depends on orphanRemoval = true in Cart.java
-            // clear() removes from collection + DB automatically
             cart.getCartItems().clear();
             cart.setRestaurant(null);
             cartRepository.save(cart);

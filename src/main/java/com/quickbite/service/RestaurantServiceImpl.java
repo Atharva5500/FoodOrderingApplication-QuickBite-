@@ -103,7 +103,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<Restaurant> byCuisine = restaurantRepository
                 .findByCuisineTypeContainingIgnoreCase(keyword);
 
-        // ✅ Merge both lists, remove duplicates, filter open only
         return Stream.concat(byName.stream(), byCuisine.stream())
                 .distinct()
                 .filter(Restaurant::isOpen)

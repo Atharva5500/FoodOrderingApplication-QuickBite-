@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    // ✅ private final — not public final
-    // Fields must be private to protect internal dependencies
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -32,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Email already registered. Please login.");
         }
 
-        // ✅ Enum compared with == not .equals()
+
         if (request.getRole() == Role.ADMIN) {
             throw new BadRequestException("Cannot register as ADMIN.");
         }

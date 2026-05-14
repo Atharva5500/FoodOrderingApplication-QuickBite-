@@ -18,7 +18,6 @@ public interface AdminService {
     void deleteRestaurant(Long restaurantId);
 
     // ─── Order Management ────────────────────────────────────────
-    // ✅ Moved from OrderService — admin only, no ownership checks
     List<OrderResponse> getAllOrders();
     OrderResponse getOrderById(Long orderId);
     List<OrderResponse> getAllRestaurantOrders(Long restaurantId);

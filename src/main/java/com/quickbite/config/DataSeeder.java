@@ -8,8 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-// CommandLineRunner runs automatically after Spring Boot starts
-// Perfect for seeding initial data
+
 @Component
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
@@ -20,8 +19,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // Only seed if admin doesn't exist yet
-        // This check prevents duplicate admin on every restart
+
         if (!userRepository.existsByEmail("admin@quickbite.com")) {
 
             User admin = User.builder()
@@ -34,9 +32,9 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             userRepository.save(admin);
-            System.out.println("✅ Admin account created: admin@quickbite.com / admin123");
+            System.out.println("Admin account created: admin@quickbite.com / admin123");
         } else {
-            System.out.println("✅ Admin account already exists");
+            System.out.println("Admin account already exists");
         }
     }
 }

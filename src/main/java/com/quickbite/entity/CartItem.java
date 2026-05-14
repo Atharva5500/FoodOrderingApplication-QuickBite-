@@ -18,12 +18,12 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many cart items belong to one cart
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    // Many cart items can reference the same menu item
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;

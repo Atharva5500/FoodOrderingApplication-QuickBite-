@@ -17,8 +17,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    // GET /api/cart
-    // Customer views their current cart
+
     @GetMapping
     public ResponseEntity<ApiResponse<CartResponse>> getMyCart(
             Authentication authentication) {
@@ -28,8 +27,7 @@ public class CartController {
         return ResponseEntity.ok(ApiResponse.success("Cart fetched", cart));
     }
 
-    // POST /api/cart/add
-    // Customer adds an item to cart
+
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<CartResponse>> addToCart(
             @Valid @RequestBody AddToCartRequest request,
@@ -40,8 +38,7 @@ public class CartController {
         return ResponseEntity.ok(ApiResponse.success("Item added to cart", cart));
     }
 
-    // DELETE /api/cart/remove/{cartItemId}
-    // Customer removes a specific item from cart
+
     @DeleteMapping("/remove/{cartItemId}")
     public ResponseEntity<ApiResponse<CartResponse>> removeFromCart(
             @PathVariable Long cartItemId,
@@ -52,8 +49,7 @@ public class CartController {
         return ResponseEntity.ok(ApiResponse.success("Item removed from cart", cart));
     }
 
-    // DELETE /api/cart/clear
-    // Customer clears entire cart
+
     @DeleteMapping("/clear")
     public ResponseEntity<ApiResponse<Void>> clearCart(
             Authentication authentication) {

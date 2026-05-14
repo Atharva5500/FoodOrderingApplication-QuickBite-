@@ -70,7 +70,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders() {
-        // ✅ Admin sees ALL orders — no ownership check
         return orderRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(this::mapOrderToResponse)
@@ -80,7 +79,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long orderId) {
-        // ✅ Admin sees ANY order — no ownership check
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Order not found with id: " + orderId));
@@ -90,7 +88,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllRestaurantOrders(Long restaurantId) {
-        // ✅ Admin sees orders for ANY restaurant — no ownership check
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Restaurant not found with id: " + restaurantId));

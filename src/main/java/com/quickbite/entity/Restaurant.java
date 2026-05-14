@@ -36,12 +36,12 @@ public class Restaurant {
 
     private Double rating = 0.0;
 
-    // Many restaurants can belong to one owner
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    // One restaurant has many menu items
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuItem> menuItems;
 

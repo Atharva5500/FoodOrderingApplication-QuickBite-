@@ -19,5 +19,5 @@ public class CartItemResponse {
     private String imageUrl;
     private BigDecimal price;
     private int quantity;
-    private BigDecimal subtotal; // price × quantity
+    private BigDecimal subtotal;
 }

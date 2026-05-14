@@ -48,10 +48,7 @@ public class RestaurantController {
 
     // ─── OWNER ENDPOINTS ─────────────────────────────────────────
 
-    // GET /api/restaurants/my
-    // Owner views their own restaurants
-    // Authentication object is injected by Spring Security
-    // authentication.getName() returns the logged-in user's email (from JWT)
+
     @GetMapping("/my")
     public ResponseEntity<ApiResponse<List<RestaurantResponse>>> getMyRestaurants(
             Authentication authentication) {
@@ -61,7 +58,7 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.success("Your restaurants", restaurants));
     }
 
-    // Owner creates a new restaurant
+
     @PostMapping
     public ResponseEntity<ApiResponse<RestaurantResponse>> create(
             @Valid @RequestBody RestaurantRequest request,
@@ -75,7 +72,7 @@ public class RestaurantController {
     }
 
 
-    // Owner updates their restaurant
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<RestaurantResponse>> update(
             @PathVariable Long id,
@@ -87,8 +84,7 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.success("Restaurant updated", restaurant));
     }
 
-    // Owner toggles open/closed status
-    // PATCH is used for partial updates — toggling one field
+
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<ApiResponse<RestaurantResponse>> toggleStatus(
             @PathVariable Long id,
@@ -99,7 +95,7 @@ public class RestaurantController {
         return ResponseEntity.ok(ApiResponse.success("Status updated", restaurant));
     }
 
-    // Owner deletes their restaurant
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(
             @PathVariable Long id,
@@ -108,7 +104,7 @@ public class RestaurantController {
         String email = authentication.getName();
         restaurantService.deleteRestaurant(id, email);
 
-        // 204 No Content — successful delete with no response body
+
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
